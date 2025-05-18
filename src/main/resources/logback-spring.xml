@@ -1,0 +1,31 @@
+<configuration>
+    <springProfile name="!prod">
+        <property name="LOGS_HOME" value="logs"/>
+        <property name="MAX_FILE_SIZE" value="200MB"/>
+        <property name="LOG_PATTERN"
+                  value="%d{yyyy-MM-dd'T'HH:mm:ss.SSSXXX} %-5level ${PID} [%thread] %logger{36} [%X{clientIp}] %msg%n"/>
+
+        <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+            <encoder>
+                <pattern>${LOG_PATTERN}</pattern>
+            </encoder>
+        </appender>
+
+        <!-- Appender for app.log -->
+        <appender name="APP" class="ch.qos.logback.core.rolling.RollingFileAppender">
+            <file>${LOGS_HOME}/application.log</file>
+            <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+                <pattern>${LOG_PATTERN}</pattern>
+            </encoder>
+            <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
+                <fileNamePattern>${LOGS_HOME}/app.%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+                <maxFileSize>${MAX_FILE_SIZE}</maxFileSize>
+            </rollingPolicy>
+        </appender>
+
+        <root level="INFO">
+            <appender-ref ref="APP"/>
+            <appender-ref ref="STDOUT"/>
+        </root>
+    </springProfile>
+</configuration>
